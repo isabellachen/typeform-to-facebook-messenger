@@ -17,9 +17,9 @@ const translateShortText = (data) => {
   return { text: data.title }
 }
 
-const translateLongText = (data) => {
-  return { text: data.title }
-}
+const translateLongText = translateShortText
+
+const translateNumber = translateShortText
 
 //statement to quick reply
 const translateStatement = (data) => {
@@ -57,6 +57,8 @@ const translateMultipleChoice = (data) => {
   return response
 }
 
+const translateDropDown = translateMultipleChoice
+
 //yes_no to quick reply
 const translateYesNo = (data) => {
   const response = {}
@@ -75,6 +77,8 @@ const translateYesNo = (data) => {
   ]
   return response
 }
+
+const translateLegal = translateYesNo
 
 //email to quick reply (fb has qr button for sending email assoc with account)
 const translateEmail = (data) => {
@@ -137,14 +141,52 @@ const translateRatings = (data) => {
   return response
 }
 
+//transform to carousel of generic templates
+const translatePictureChoice = (data) => {
+  const response = {}
+  const elements = data.properties.choices.map(choice => {
+    const buttons = [
+      {
+        type: 'postback',
+        title: `select ${choice.label}`,
+        payload: choice.label,
+      },
+    ]
+    return {
+      title: data.title,
+      image_url: choice.attachment.href,
+      buttons,
+    }
+  })
+  response.attachment = {
+    type: 'template',
+    payload: {
+      template_type: 'generic',
+      elements,
+    },
+  }
+  return response
+}
+
+const translateDate = (data) => {
+  return { 
+    text: data.title + '\n' + 'format: ' + data.properties.structure,
+  }
+}
+
 module.exports = {
   translateWelcomeScreen,
   translateShortText,
   translateLongText,
+  translateNumber,
   translateStatement,
   translateYesNo,
   translateMultipleChoice,
+  translateDropDown,
   translateEmail,
   translateOpinionScale,
   translateRatings,
+  translatePictureChoice,
+  translateDate,
+  translateLegal,
 }

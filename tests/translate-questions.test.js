@@ -8,12 +8,17 @@ const {
   translateWelcomeScreen,
   translateShortText,
   translateLongText,
+  translateNumber,
   translateStatement,
-  translateMultipleChoice,
   translateYesNo,
+  translateMultipleChoice,
+  translateDropDown,
   translateEmail,
   translateOpinionScale,
   translateRatings,
+  translatePictureChoice,
+  translateDate,
+  translateLegal,
 } = translateFunctions
 
 describe('should translate the welcome screen', () => {
@@ -269,6 +274,68 @@ describe('should translate questions that ask for a rating', () => {
       Number(payloadArr[0]).should.equal(counter)
       Number(payloadArr[payloadArr.length-1]).should.equal(ratingQuestion.properties.steps)
       counter ++
+    }
+  })
+})
+
+describe('should translate questions with choices accompanied by pictures', () => {
+  const pictureChoiceQuestion = mocks.fields.filter(question => {
+    return question.type === 'picture_choice'
+  })[0]
+
+  const translated = translatePictureChoice(pictureChoiceQuestion)
+  
+  it('should have an attachment property', () => {
+    translated.should.have.property('attachment')
+  })
+
+  const attachment = translated.attachment
+
+  it('attachment should have property type set to template', () => {
+    attachment.should.have.property('type', 'template')
+  })
+  it('attachment should have payload property', () => {
+    attachment.should.have.property('payload')
+  })
+  it('payload should have template type set to generic', () => {
+    attachment.payload.should.have.property('template_type', 'generic')
+  })
+  it('payload should have an elements array equal to length of choices', () => {
+    attachment.payload.elements.should.have.length(pictureChoiceQuestion.properties.choices.length)
+  })
+
+  const fbElements = attachment.payload.elements
+  const tfChoices = pictureChoiceQuestion.properties.choices
+
+  it('each element should have a title property', () => {
+    fbElements.forEach(el => el.should.have.property('title', pictureChoiceQuestion.title))
+  })
+
+  it('each element should have a button array with one element', () => {
+    fbElements.forEach(el => el.buttons.should.have.length(1))
+  })
+
+  it('each element should have a image_url property', () => {
+    for ([index, el] of fbElements.entries()) {
+      el.image_url.should.equal(tfChoices[index].attachment.href)
+    }
+  })
+
+  it('each button should be type of postback', () => {
+    fbElements.forEach(el => {
+      el.buttons.forEach(button => button.should.have.property('type', 'postback'))
+    })
+  })
+
+  it('each button should have a title equal to the choice label', () => {
+    for ([index, el] of fbElements.entries()) {
+      el.buttons[0].should.have.property('title', `select ${tfChoices[index].label}`) 
+    }
+  })
+
+  it('each button should have a payload', () => {
+    for ([index, el] of fbElements.entries()) {
+      el.buttons[0].should.have.property('payload', tfChoices[index].label)
     }
   })
 })
