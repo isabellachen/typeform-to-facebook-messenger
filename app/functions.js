@@ -1,7 +1,9 @@
+const translateShortText = (data) => {
+  return { text: data.title }
+}
 //welcome_screen
 const translateWelcomeScreen = (data) => {
-  const response = {}
-  response.text = data.title
+  const response = translateShortText(data)
   response.quick_replies = [
     {
       content_type: 'text',
@@ -13,9 +15,6 @@ const translateWelcomeScreen = (data) => {
 }
 
 //short_text
-const translateShortText = (data) => {
-  return { text: data.title }
-}
 
 const translateLongText = translateShortText
 
@@ -25,8 +24,7 @@ const translateDate = translateShortText
 
 //statement to quick reply
 const translateStatement = (data) => {
-  const response = {}
-  response.text = data.title
+  const response = translateShortText(data)
   response.quick_replies = [
     {
       content_type: 'text',
@@ -63,8 +61,7 @@ const translateDropDown = translateMultipleChoice
 
 //yes_no to quick reply
 const translateYesNo = (data) => {
-  const response = {}
-  response.text = data.title
+  const response = translateShortText(data)
   response.quick_replies = [
     {
       content_type: 'text',
@@ -84,8 +81,7 @@ const translateLegal = translateYesNo
 
 //email to quick reply (fb has qr button for sending email assoc with account)
 const translateEmail = (data) => {
-  const response = {}
-  response.text = data.title
+  const response = translateShortText(data)
   response.quick_replies = [
     {
       content_type: 'user_email',
@@ -97,8 +93,7 @@ const translateEmail = (data) => {
 
 //opinion scale to quick reply
 const translateOpinionScale = (data) => {
-  const response = {}
-  response.text = data.title
+  const response = translateShortText(data)
   response.quick_replies = [
     {
       content_type: 'text',
@@ -130,9 +125,8 @@ const translateOpinionScale = (data) => {
 }
 
 const translateRatings = (data) => {
-  const response = {}
+  const response = translateShortText(data)
   let counter = 0
-  response.text = data.title
   response.quick_replies = Array(data.properties.steps).fill('*').map(space => {
     return {
       content_type: 'text',

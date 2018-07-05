@@ -4,23 +4,9 @@ const mocks = require('./mocks/typeform-form')
 
 const translateFunctions = require('../app/functions')
 
-const {
-  translateWelcomeScreen,
-  translateShortText,
-  translateLongText,
-  translateStatement,
-  translateYesNo,
-  translateMultipleChoice,
-  translateEmail,
-  translateOpinionScale,
-  translateRatings,
-  translatePictureChoice,
-  translateDate,
-} = translateFunctions
-
 describe('should translate the welcome screen', () => {
   const data = mocks.welcome_screens[0]
-  const translated = translateWelcomeScreen(data)
+  const translated = translateFunctions.translateWelcomeScreen(data)
   
   it('should have a text property with the title of the welcome screen', () => {
     translated.should.have.property('text', data.title)
@@ -45,7 +31,7 @@ describe('should translate short text questions', () => {
     return question.type === 'short_text'
   })[0]
 
-  const question = translateShortText(shortTextQuestion)
+  const question = translateFunctions.translateShortText(shortTextQuestion)
   
   it('should have a text property that is the Typeform question', () => {
     question.should.have.property('text', shortTextQuestion.title)
@@ -57,7 +43,7 @@ describe('should translate statement', () => {
     return question.type === 'statement'
   })[0]
 
-  const translated = translateStatement(statement)
+  const translated = translateFunctions.translateStatement(statement)
 
   it('should have a text property with the title of the statement', () => {
     translated.should.have.property('text', statement.title)
@@ -81,7 +67,7 @@ describe('should translate long_text questions', () => {
     return question.type === 'long_text'
   })[0]
 
-  const question = translateLongText(longTextQuestion)
+  const question = translateFunctions.translateLongText(longTextQuestion)
 
   it('should have a text property that is the Typeform question', () => {
     question.should.have.property('text', longTextQuestion.title)
@@ -93,7 +79,7 @@ describe('should translate yes/no questions', () => {
     return question.type === 'yes_no'
   })[0]
 
-  const translated = translateYesNo(yesNoQuestion)
+  const translated = translateFunctions.translateYesNo(yesNoQuestion)
 
   it ('should have a text property with the title of the questions', () => {
     translated.should.have.property('text', yesNoQuestion.title)
@@ -130,9 +116,8 @@ describe('should translate multiple choice questions', () => {
   const multipleChoiceQuestion = mocks.fields.filter(question => {
     return question.type === 'multiple_choice'
   })[0]
-  console.log(multipleChoiceQuestion.properties.choices)
 
-  const question = translateMultipleChoice(multipleChoiceQuestion)
+  const question = translateFunctions.translateMultipleChoice(multipleChoiceQuestion)
 
   it('should not have a text property', () => {
     question.should.not.have.property('text')
@@ -171,7 +156,7 @@ describe('should translate questions asking for email', () => {
     return question.type === 'email'
   })[0]
 
-  const translated = translateEmail(emailQuestion)
+  const translated = translateFunctions.translateEmail(emailQuestion)
 
   it('should have a text property with the title of the questions', () => {
     translated.should.have.property('text', emailQuestion.title)
@@ -198,7 +183,7 @@ describe('should translate questions that use an opinion scale', () => {
     return question.type === 'opinion_scale'
   })[0]
 
-  const translated = translateOpinionScale(opinionScaleQuestions)
+  const translated = translateFunctions.translateOpinionScale(opinionScaleQuestions)
 
   it('should have a text property with the title of the questions', () => {
     translated.should.have.property('text', opinionScaleQuestions.title)
@@ -229,7 +214,7 @@ describe('should translate questions that ask for a rating', () => {
     return question.type === 'rating'
   })[0]
 
-  const translated = translateRatings(ratingQuestion)
+  const translated = translateFunctions.translateRatings(ratingQuestion)
 
   it('should have a text property with the title of the questions', () => {
     translated.should.have.property('text', ratingQuestion.title)
@@ -264,7 +249,7 @@ describe('should translate questions with choices accompanied by pictures', () =
     return question.type === 'picture_choice'
   })[0]
 
-  const translated = translatePictureChoice(pictureChoiceQuestion)
+  const translated = translateFunctions.translatePictureChoice(pictureChoiceQuestion)
   
   it('should have an attachment property', () => {
     translated.should.have.property('attachment')
