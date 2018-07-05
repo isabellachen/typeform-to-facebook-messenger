@@ -21,6 +21,8 @@ const translateLongText = translateShortText
 
 const translateNumber = translateShortText
 
+const translateDate = translateShortText
+
 //statement to quick reply
 const translateStatement = (data) => {
   const response = {}
@@ -101,27 +103,27 @@ const translateOpinionScale = (data) => {
     {
       content_type: 'text',
       title: '1',
-      payload: '1 out of 5',
+      payload: {choice: 1, base: 5},
     },
     {
       content_type: 'text',
       title: '2',
-      payload: '2 out of 5',
+      payload: {choice: 2, base: 5 },
     },
     {
       content_type: 'text',
       title: '3',
-      payload: '3 out of 5',
+      payload: {choice: 3, base: 5 },
     },
     {
       content_type: 'text',
       title: '4',
-      payload: '4 out of 5',
+      payload: {choice: 4, base: 5 },
     },
     {
       content_type: 'text',
       title: '5',
-      payload: '5 out of 5',
+      payload: {choice: 5, base: 5 },
     },
   ]
   return response
@@ -166,12 +168,6 @@ const translatePictureChoice = (data) => {
     },
   }
   return response
-}
-
-const translateDate = (data) => {
-  return { 
-    text: data.title + '\n' + 'format: ' + data.properties.structure,
-  }
 }
 
 module.exports = {

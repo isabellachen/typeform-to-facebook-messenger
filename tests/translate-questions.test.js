@@ -8,33 +8,28 @@ const {
   translateWelcomeScreen,
   translateShortText,
   translateLongText,
-  translateNumber,
   translateStatement,
   translateYesNo,
   translateMultipleChoice,
-  translateDropDown,
   translateEmail,
   translateOpinionScale,
   translateRatings,
   translatePictureChoice,
   translateDate,
-  translateLegal,
 } = translateFunctions
 
 describe('should translate the welcome screen', () => {
   const data = mocks.welcome_screens[0]
   const translated = translateWelcomeScreen(data)
-  it('should be an object', () => {
-    translated.should.be.an('object')
-  })
+  
   it('should have a text property with the title of the welcome screen', () => {
     translated.should.have.property('text', data.title)
   })
   it('should have a quick_replies property of type array', () => {
     translated.quick_replies.should.be.an('array')
   })
-  it('quick_replies should have at least one element in it', () => {
-    translated.quick_replies.should.not.be.empty
+  it('quick_replies should have one element in it', () => {
+    translated.quick_replies.should.have.length(1)
   })
   it('quick_replies should contain objects with properties of content_type, title and payload', () => {
     translated.quick_replies.forEach(reply => {
@@ -51,9 +46,7 @@ describe('should translate short text questions', () => {
   })[0]
 
   const question = translateShortText(shortTextQuestion)
-  it('should be an object', () => {
-    question.should.be.an('object')
-  })
+  
   it('should have a text property that is the Typeform question', () => {
     question.should.have.property('text', shortTextQuestion.title)
   })
@@ -65,18 +58,15 @@ describe('should translate statement', () => {
   })[0]
 
   const translated = translateStatement(statement)
-  it('should be an object', () => {
-    translated.should.be.an('object')
-  })
+
   it('should have a text property with the title of the statement', () => {
     translated.should.have.property('text', statement.title)
   })
-  it('should have a quick_replies property of type array', () => {
-    translated.quick_replies.should.be.an('array')
+
+  it('quick_replies should have one element in it', () => {
+    translated.quick_replies.should.have.length(1)
   })
-  it('quick_replies should have at least one element in it', () => {
-    translated.quick_replies.should.not.be.empty
-  })
+
   it('quick_replies should contain objects with properties of content_type, title and payload', () => {
     translated.quick_replies.forEach(reply => {
       reply.should.have.property('content_type', 'text')
@@ -92,9 +82,7 @@ describe('should translate long_text questions', () => {
   })[0]
 
   const question = translateLongText(longTextQuestion)
-  it('should be an object', () => {
-    question.should.be.an('object')
-  })
+
   it('should have a text property that is the Typeform question', () => {
     question.should.have.property('text', longTextQuestion.title)
   })
@@ -107,9 +95,6 @@ describe('should translate yes/no questions', () => {
 
   const translated = translateYesNo(yesNoQuestion)
 
-  it ('should be an object', () => {
-    translated.should.be.an('object')
-  })
   it ('should have a text property with the title of the questions', () => {
     translated.should.have.property('text', yesNoQuestion.title)
   })
@@ -126,16 +111,16 @@ describe('should translate yes/no questions', () => {
       reply.should.have.property('payload')
     })
   })
-  it ('quick_replies[0].title should be "yes"', () => {
+  it ('The first option given by quick_replies should be a "yes"', () => {
     translated.quick_replies[0].title.should.equal('yes')
   })
-  it('quick_replies[0].payload should be "yes"', () => {
+  it('The first payload should return a "yes"', () => {
     translated.quick_replies[0].payload.should.equal('yes')
   })  
-  it('quick_replies[1].title should be "no"', () => {
+  it('The second option given by quick_replies should be a "no"', () => {
     translated.quick_replies[1].title.should.equal('no')
   })
-  it('quick_replies[1].payload should be "no"', () => {
+  it('The second payload should return a "no"', () => {
     translated.quick_replies[1].payload.should.equal('no')
   })
 })
@@ -145,12 +130,10 @@ describe('should translate multiple choice questions', () => {
   const multipleChoiceQuestion = mocks.fields.filter(question => {
     return question.type === 'multiple_choice'
   })[0]
+  console.log(multipleChoiceQuestion.properties.choices)
 
   const question = translateMultipleChoice(multipleChoiceQuestion)
 
-  it('should be an object', () => {
-    question.should.be.an('object')
-  })
   it('should not have a text property', () => {
     question.should.not.have.property('text')
   })
@@ -173,13 +156,14 @@ describe('should translate multiple choice questions', () => {
     question.attachment.payload.buttons.should.be.an('array')
   })
   it('should have buttons with type, title and payload ', () => {
-    question.attachment.payload.buttons.forEach(button => {
-      button.should.have.property('type', 'postback')
-      button.should.have.property('title')
-      button.should.have.property('payload')
-    })
+    const fbButtons = question.attachment.payload.buttons
+    const tfChoices = multipleChoiceQuestion.properties.choices
+    for ([index, el] of fbButtons.entries()) {
+      el.should.have.property('type', 'postback')
+      el.should.have.property('title', tfChoices[index].label)
+      el.should.have.property('payload')
+    }
   })
-
 })
 
 describe('should translate questions asking for email', () => {
@@ -189,9 +173,6 @@ describe('should translate questions asking for email', () => {
 
   const translated = translateEmail(emailQuestion)
 
-  it('should be an object', () => {
-    translated.should.be.an('object')
-  })
   it('should have a text property with the title of the questions', () => {
     translated.should.have.property('text', emailQuestion.title)
   })
@@ -219,9 +200,6 @@ describe('should translate questions that use an opinion scale', () => {
 
   const translated = translateOpinionScale(opinionScaleQuestions)
 
-  it('should be an object', () => {
-    translated.should.be.an('object')
-  })
   it('should have a text property with the title of the questions', () => {
     translated.should.have.property('text', opinionScaleQuestions.title)
   })
@@ -238,6 +216,12 @@ describe('should translate questions that use an opinion scale', () => {
       }
     }).should.equal(true)
   })
+  it('quick_replies payload property should return the score', () => {
+    for ([index, el] of translated.quick_replies.entries()) {
+      el.payload.choice.should.equal(++index)
+      el.payload.base.should.equal(5)
+    }
+  })
 })
 
 describe('should translate questions that ask for a rating', () => {
@@ -247,9 +231,6 @@ describe('should translate questions that ask for a rating', () => {
 
   const translated = translateRatings(ratingQuestion)
 
-  it('should be an object', () => {
-    translated.should.be.an('object')
-  })
   it('should have a text property with the title of the questions', () => {
     translated.should.have.property('text', ratingQuestion.title)
   })
