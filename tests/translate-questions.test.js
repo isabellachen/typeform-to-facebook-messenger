@@ -2,7 +2,7 @@ const mocha = require('mocha')
 const chai = require('chai').should()
 const mocks = require('./mocks/typeform-form')
 
-const translateFunctions = require('../app/functions')
+const translateFunctions = require('../app/translate-fields')
 
 describe('should translate the welcome screen', () => {
   const data = mocks.welcome_screens[0]

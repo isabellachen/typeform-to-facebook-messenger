@@ -1,10 +1,14 @@
 {
-  "name": "typeform-messenger-lib",
-  "version": "1.0.0",
+  "name": "typeform-to-facebook-messenger",
+  "version": "1.0.2",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "mocha tests/*.test.js --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/isabellachen/typeform-to-facebook-messenger"
   },
   "author": "",
   "license": "ISC",

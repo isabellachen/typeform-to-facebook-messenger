@@ -11,6 +11,7 @@ A library to transform typeform questions to responses for Facebook messenger
 - Obtain the recipient PSID/ ADMIN_ID, this would be the ID of your facebook account, not the ID of the bot.
 - Use postman to [simulate a request as described here](https://developers.facebook.com/docs/messenger-platform/send-messages/quick-replies)
 
+### Function available
 The library translates several Typeform questions in a way that Facebook's Messenger can understand. The functions available are: 
 
 ```
@@ -48,3 +49,6 @@ function callSendAPI(sender_psid, response) {
   }
 }
 ```
+
+### Contributions
+If there is any typeform question type I have missed, or if you think there is a better way to representa Typeform question type in Facebook Messenger than the way I've done it, contributions welcomed!
